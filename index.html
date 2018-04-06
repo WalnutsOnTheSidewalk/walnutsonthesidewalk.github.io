@@ -1,7 +1,49 @@
-<!DOCTYPE html>
-<head>
-  <title>Under Construction</title>
-</head>
-<body>
-<h1>Under Construction. Please wait until June 2018.</h1>
-</body>
+<!doctype html>
+<html>
+	<head>
+		<title>Book List</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script>
+			$.getJSON('https://sheets.googleapis.com/v4/spreadsheets/1SX_T2RpBbNN1LgalLx_8yzkGiiXCZNT0Ayj57fKLthU/values/Master%20List%20by%20Author?key=AIzaSyDezqOKn96aGEeBEx_x9MrkxliPoPs1A6I', 
+    			function(data) {
+					var values = data.values;
+					for (i=1; i < values.length; i++) {
+						var book = values[i];
+						var newdiv = document.createElement("div");
+						newdiv.id = book[0]
+						newdiv.classList.add('book');
+						newdiv.innerHTML = '<h1>' + book[0] + 
+								   '</h1> <p><b>Walnut:</b> ' + book[1] + 
+								   '</p> <p><b>Comment:</b> ' + book[2] + 
+								   '</p> <p><b>Author:</b> ' + book[3] + 
+								   '</p> <p><b>Description:</b> ' + book[4] + 
+								   '</p> <p><b>Genre:</b> ' + book[5] + '</p> <hr>'
+						
+						$.getJSON('https://www.googleapis.com/books/v1/volumes?q=' + book[0] + '&key=AIzaSyDezqOKn96aGEeBEx_x9MrkxliPoPs1A6I',
+							function(data) {
+								console.log('hello');
+								var newdiv = document.getElementById(book[0])
+								var imgURL = data.items[0].volumeInfo.imageLinks.thumbnail;
+								var img = document.createElement('img');
+								img.src = imgURL;
+								newdiv.appendChild(img);
+							}
+						)
+
+						document.body.appendChild(newdiv);
+					}
+				}
+			);
+		</script>
+		<style>
+			* {
+				font-family: Helvetica;
+			}
+			.book {
+				display: inline-block;
+				width: 30%;
+				padding: 20px;
+			}
+		</style>
+	</head>
+</html>
